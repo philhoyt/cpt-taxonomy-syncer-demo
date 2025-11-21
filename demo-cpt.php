@@ -120,7 +120,79 @@ function demo_cpt_admin_notice() {
 add_action( 'admin_notices', 'demo_cpt_admin_notice' );
 
 /**
- * Show admin notice to create test content after sync is configured
+ * Show admin notice to sync terms to posts after sync is configured
+ */
+function demo_cpt_sync_terms_notice() {
+	// Only show on admin pages
+	if ( ! is_admin() ) {
+		return;
+	}
+
+	// Check if CPT-Taxonomy Syncer is active
+	if ( ! function_exists( 'cpt_taxonomy_syncer_init' ) ) {
+		return;
+	}
+
+	// Check if sync pair is configured
+	$pairs = get_option( 'cpt_tax_syncer_pairs', array() );
+	$is_configured = false;
+	foreach ( $pairs as $pair ) {
+		if ( isset( $pair['cpt_slug'] ) && $pair['cpt_slug'] === 'habitats' 
+			&& isset( $pair['taxonomy_slug'] ) && $pair['taxonomy_slug'] === 'habitat_types' ) {
+			$is_configured = true;
+			break;
+		}
+	}
+
+	// Only show if sync is configured
+	if ( ! $is_configured ) {
+		return;
+	}
+
+	// Check if there are terms in the taxonomy
+	$terms = get_terms(
+		array(
+			'taxonomy'   => 'habitat_types',
+			'hide_empty' => false,
+		)
+	);
+
+	// If no terms exist, skip this notice (will show create Habitat notice instead)
+	if ( is_wp_error( $terms ) || empty( $terms ) ) {
+		return;
+	}
+
+	// Check if there are already Habitats posts (if so, terms may have been synced)
+	$habitats_count = wp_count_posts( 'habitats' );
+	$has_posts = isset( $habitats_count->publish ) && $habitats_count->publish > 0;
+
+	// If there are posts, assume syncing has happened, so skip this notice
+	if ( $has_posts ) {
+		return;
+	}
+
+	// Show notice to sync terms to posts
+	$settings_url = admin_url( 'tools.php?page=cpt-taxonomy-syncer' );
+	?>
+	<div class="notice notice-warning is-dismissible">
+		<p>
+			<strong><?php esc_html_e( 'Sync Terms to Posts', 'cpt-taxonomy-syncer-demo' ); ?></strong>
+		</p>
+		<p>
+			<?php esc_html_e( 'You have terms in the "Habitat Types" taxonomy. To sync these existing terms to posts, go to the CPT-Tax Syncer settings page and click "Sync Terms to Posts".', 'cpt-taxonomy-syncer-demo' ); ?>
+		</p>
+		<p>
+			<a href="<?php echo esc_url( $settings_url ); ?>" class="button button-primary">
+				<?php esc_html_e( 'Go to Sync Settings', 'cpt-taxonomy-syncer-demo' ); ?>
+			</a>
+		</p>
+	</div>
+	<?php
+}
+add_action( 'admin_notices', 'demo_cpt_sync_terms_notice' );
+
+/**
+ * Show admin notice to create test content after sync is configured and terms are synced
  */
 function demo_cpt_test_content_notice() {
 	// Only show on admin pages
@@ -149,12 +221,21 @@ function demo_cpt_test_content_notice() {
 		return;
 	}
 
+	// Check if there are terms in the taxonomy
+	$terms = get_terms(
+		array(
+			'taxonomy'   => 'habitat_types',
+			'hide_empty' => false,
+		)
+	);
+
 	// Check if there are already Habitats posts
 	$habitats_count = wp_count_posts( 'habitats' );
 	$has_posts = isset( $habitats_count->publish ) && $habitats_count->publish > 0;
 
-	// Don't show if they already have posts
-	if ( $has_posts ) {
+	// If terms exist but no posts, show sync notice instead (handled by demo_cpt_sync_terms_notice)
+	// Don't show this notice if terms exist but haven't been synced yet
+	if ( ! is_wp_error( $terms ) && ! empty( $terms ) && ! $has_posts ) {
 		return;
 	}
 
@@ -163,7 +244,7 @@ function demo_cpt_test_content_notice() {
 	?>
 	<div class="notice notice-success is-dismissible">
 		<p>
-			<strong><?php esc_html_e( 'Sync Pair Configured!', 'cpt-taxonomy-syncer-demo' ); ?></strong>
+			<strong><?php esc_html_e( 'Ready to Create Content!', 'cpt-taxonomy-syncer-demo' ); ?></strong>
 		</p>
 		<p>
 			<?php esc_html_e( 'Great! Now try creating a new Habitats post to see the syncing in action. When you create a Habitats post, a corresponding "Habitat Types" term will be automatically created (and vice versa).', 'cpt-taxonomy-syncer-demo' ); ?>
