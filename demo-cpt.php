@@ -63,6 +63,86 @@ function demo_cpt_register_taxonomy() {
 add_action( 'init', 'demo_cpt_register_taxonomy' );
 
 /**
+ * Register block templates for the demo plugin
+ *
+ * @return void
+ */
+function demo_cpt_register_block_templates() {
+	// Check if register_block_template function exists (WordPress 6.7+).
+	if ( ! function_exists( 'register_block_template' ) ) {
+		return;
+	}
+
+	// Register single habitat template.
+	// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedFunctionFound
+	register_block_template(
+		'cpt-taxonomy-syncer-demo//single-habitats',
+		array(
+			'title'       => __( 'Single Habitat', 'cpt-taxonomy-syncer-demo' ),
+			'description' => __( 'Default template for displaying a single habitat post.', 'cpt-taxonomy-syncer-demo' ),
+			'content'     => '<!-- wp:template-part {"slug":"header","theme":"twentytwentyfive"} /-->
+
+<!-- wp:group {"tagName":"main","style":{"spacing":{"margin":{"top":"var:preset|spacing|60"}}},"layout":{"type":"constrained"}} -->
+<main class="wp-block-group" style="margin-top:var(--wp--preset--spacing--60)"><!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|60","bottom":"var:preset|spacing|60"}}},"layout":{"type":"constrained"}} -->
+<div class="wp-block-group alignfull" style="padding-top:var(--wp--preset--spacing--60);padding-bottom:var(--wp--preset--spacing--60)"><!-- wp:post-title {"level":1} /-->
+
+<!-- wp:post-featured-image {"aspectRatio":"3/2"} /-->
+
+<!-- wp:group {"className":"has-link-color","style":{"spacing":{"blockGap":"0.2em","margin":{"bottom":"var:preset|spacing|60"}}},"textColor":"accent-4","fontSize":"small","layout":{"type":"flex","flexWrap":"wrap"}} -->
+<div class="wp-block-group has-link-color has-accent-4-color has-text-color has-small-font-size" style="margin-bottom:var(--wp--preset--spacing--60)"><!-- wp:paragraph -->
+<p>Written by </p>
+<!-- /wp:paragraph -->
+
+<!-- wp:post-author-name {"isLink":true} /-->
+
+<!-- wp:paragraph -->
+<p>in</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:post-terms {"term":"category","style":{"typography":{"fontWeight":"300"}}} /--></div>
+<!-- /wp:group -->
+
+<!-- wp:post-content {"align":"full","layout":{"type":"constrained"}} /-->
+
+<!-- wp:query {"queryId":12,"query":{"perPage":10,"pages":0,"offset":0,"postType":"animals","order":"desc","orderBy":"date","author":"","search":"","exclude":[],"sticky":"","inherit":false,"useSyncedRelationship":true,"relationshipDirection":"posts_from_terms","targetPostType":"","parents":[],"format":[]}} -->
+<div class="wp-block-query"><!-- wp:heading -->
+<h2 class="wp-block-heading">Related Animals</h2>
+<!-- /wp:heading -->
+
+<!-- wp:post-template -->
+<!-- wp:post-title {"level":3} /-->
+<!-- /wp:post-template -->
+
+<!-- wp:query-pagination -->
+<!-- wp:query-pagination-previous /-->
+<!-- wp:query-pagination-numbers /-->
+<!-- wp:query-pagination-next /-->
+<!-- /wp:query-pagination -->
+
+<!-- wp:query-no-results -->
+<!-- wp:paragraph {"placeholder":"Add text or blocks that will display when a query returns no results."} -->
+<p></p>
+<!-- /wp:paragraph -->
+<!-- /wp:query-no-results --></div>
+<!-- /wp:query -->
+
+<!-- wp:group {"align":"wide","style":{"spacing":{"margin":{"top":"var:preset|spacing|60","bottom":"var:preset|spacing|60"}}},"layout":{"type":"default"}} -->
+<div class="wp-block-group alignwide" style="margin-top:var(--wp--preset--spacing--60);margin-bottom:var(--wp--preset--spacing--60)"><!-- wp:group {"tagName":"nav","align":"wide","style":{"border":{"top":{"color":"var:preset|color|accent-6","width":"1px"}},"spacing":{"padding":{"top":"var:preset|spacing|40","bottom":"var:preset|spacing|40"}}},"layout":{"type":"flex","flexWrap":"nowrap","justifyContent":"space-between"},"ariaLabel":"Post navigation"} -->
+<nav class="wp-block-group alignwide" aria-label="Post navigation" style="border-top-color:var(--wp--preset--color--accent-6);border-top-width:1px;padding-top:var(--wp--preset--spacing--40);padding-bottom:var(--wp--preset--spacing--40)"><!-- wp:post-navigation-link {"type":"previous","showTitle":true,"arrow":"arrow"} /-->
+
+<!-- wp:post-navigation-link {"showTitle":true,"arrow":"arrow"} /--></nav>
+<!-- /wp:group --></div>
+<!-- /wp:group --></div>
+<!-- /wp:group --></main>
+<!-- /wp:group -->
+
+<!-- wp:template-part {"slug":"footer","theme":"twentytwentyfive"} /-->',
+		)
+	);
+}
+add_action( 'init', 'demo_cpt_register_block_templates' );
+
+/**
  * Show admin notice to configure sync pair
  */
 function demo_cpt_admin_notice() {
