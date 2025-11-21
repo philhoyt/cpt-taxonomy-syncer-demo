@@ -110,12 +110,16 @@ function demo_cpt_register_block_templates() {
 <!-- /wp:heading -->
 
 <!-- wp:post-template -->
-<!-- wp:post-title {"level":3} /-->
+<!-- wp:post-title {"level":3,"isLink":true} /-->
+
+<!-- wp:post-excerpt /-->
 <!-- /wp:post-template -->
 
 <!-- wp:query-pagination -->
 <!-- wp:query-pagination-previous /-->
+
 <!-- wp:query-pagination-numbers /-->
+
 <!-- wp:query-pagination-next /-->
 <!-- /wp:query-pagination -->
 
