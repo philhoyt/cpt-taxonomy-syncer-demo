@@ -88,20 +88,6 @@ function demo_cpt_register_block_templates() {
 
 <!-- wp:post-featured-image {"aspectRatio":"3/2"} /-->
 
-<!-- wp:group {"className":"has-link-color","style":{"spacing":{"blockGap":"0.2em","margin":{"bottom":"var:preset|spacing|60"}}},"textColor":"accent-4","fontSize":"small","layout":{"type":"flex","flexWrap":"wrap"}} -->
-<div class="wp-block-group has-link-color has-accent-4-color has-text-color has-small-font-size" style="margin-bottom:var(--wp--preset--spacing--60)"><!-- wp:paragraph -->
-<p>Written by </p>
-<!-- /wp:paragraph -->
-
-<!-- wp:post-author-name {"isLink":true} /-->
-
-<!-- wp:paragraph -->
-<p>in</p>
-<!-- /wp:paragraph -->
-
-<!-- wp:post-terms {"term":"category","style":{"typography":{"fontWeight":"300"}}} /--></div>
-<!-- /wp:group -->
-
 <!-- wp:post-content {"align":"full","layout":{"type":"constrained"}} /-->
 
 <!-- wp:query {"queryId":12,"query":{"perPage":10,"pages":0,"offset":0,"postType":"animals","order":"desc","orderBy":"date","author":"","search":"","exclude":[],"sticky":"","inherit":false,"useSyncedRelationship":true,"relationshipDirection":"posts_from_terms","targetPostType":"","parents":[],"format":[]}} -->
@@ -110,9 +96,12 @@ function demo_cpt_register_block_templates() {
 <!-- /wp:heading -->
 
 <!-- wp:post-template -->
-<!-- wp:post-title {"level":3,"isLink":true} /-->
+<!-- wp:group {"style":{"spacing":{"blockGap":"0"}},"layout":{"type":"constrained"}} -->
+<div class="wp-block-group"><!-- wp:post-title {"level":3,"isLink":true} /-->
 
-<!-- wp:post-excerpt /-->
+<!-- wp:post-content /--></div>
+<!-- /wp:group -->
+
 <!-- /wp:post-template -->
 
 <!-- wp:query-pagination -->
